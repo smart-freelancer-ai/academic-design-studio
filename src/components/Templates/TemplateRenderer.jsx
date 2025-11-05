@@ -1,10 +1,8 @@
 import { useDesign } from '../../contexts/DesignContext'
 
 // Simple Templates
-import ParticipationTemplate from './Simple/ParticipationTemplate'
-import ComparisonTemplate from './Simple/ComparisonTemplate'
-import ConferenceTemplate from './Simple/ConferenceTemplate'
-import CollegeTemplate from './Simple/CollegeTemplate'
+
+import DynamicTemplateRenderer from '../Design/DynamicTemplateRenderer'
 
 // Advanced Templates
 import CertificateTemplate from './Advanced/CertificateTemplate'
@@ -23,15 +21,13 @@ const TemplateRenderer = () => {
   if (currentMode === 'simple') {
     switch (currentTemplate) {
       case 'participation':
-        return <ParticipationTemplate />
       case 'comparison':
-        return <ComparisonTemplate />
       case 'conference':
-        return <ConferenceTemplate />
       case 'college':
-        return <CollegeTemplate />
+      case 'generalAnnouncement':
+        return <DynamicTemplateRenderer />
       default:
-        return <ParticipationTemplate />
+        return <DynamicTemplateRenderer />
     }
   }
 

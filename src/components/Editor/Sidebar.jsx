@@ -6,6 +6,7 @@ import TemplateControls from '../Controls/TemplateControls'
 import ColorPalette from '../Controls/ColorPalette'
 import LogoManager from '../Controls/LogoManager'
 import ActionButtons from '../Controls/ActionButtons'
+import SavedDesignsManager from '../Controls/SavedDesignsManager'
 import AIAssistant from '../AI/AIAssistant'
 
 const Sidebar = () => {
@@ -50,6 +51,9 @@ const Sidebar = () => {
 
       {/* إدارة الشعارات */}
       <LogoManager />
+
+      {/* إدارة التصاميم والحفظ */}
+      <SavedDesignsManager />
 
       {/* أزرار الإجراءات */}
       <ActionButtons />

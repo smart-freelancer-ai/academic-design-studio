@@ -4,6 +4,7 @@ import CertificateControls from './CertificateControls'
 import PromotionalControls from './PromotionalControls'
 import ResearcherCardControls from './ResearcherCardControls'
 import AcademicCertificateControls from './AcademicCertificateControls'
+import DynamicEditor from './DynamicEditor'
 import { Edit } from 'lucide-react'
 
 const TemplateControls = () => {
@@ -16,7 +17,12 @@ const TemplateControls = () => {
         المحتوى
       </h3>
       
-      {currentMode === 'simple' && <SimpleControls />}
+      {currentMode === 'simple' && (
+        <>
+          {currentTemplate === 'generalAnnouncement' && <DynamicEditor />}
+          {currentTemplate !== 'generalAnnouncement' && <SimpleControls />}
+        </>
+      )}
       
       {currentMode === 'advanced' && (
         <>

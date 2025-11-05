@@ -9,7 +9,9 @@ export const defaultLogos = {
 }
 
 // البيانات الافتراضية للقوالب
+import { templates as dynamicTemplates } from './designSchema.json'
 export const defaultTemplateData = {
+  generalAnnouncement: dynamicTemplates[0],
   participation: {
     mainTitle: 'باقة المشاركة الحضورية',
     subtitle: 'المحفل العلمي الدولي السابع عشر - تركيا',
@@ -152,6 +154,7 @@ export const defaultTemplateData = {
 // قائمة القوالب حسب التصنيف
 export const templates = {
   simple: [
+    { id: 'generalAnnouncement', name: 'إعلان ديناميكي', icon: 'Sparkles', category: 'dynamic' },
     { id: 'participation', name: 'باقة المشاركة', icon: 'Ticket', category: 'cards' },
     { id: 'comparison', name: 'المقارنة', icon: 'Scale', category: 'promotions' },
     { id: 'conference', name: 'المؤتمر', icon: 'Users', category: 'cards' },

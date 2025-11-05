@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react'
-import { defaultLogos, defaultTemplateData } from '../data/defaults'
+import { defaultLogos, defaultTemplateData, templates } from '../data/defaults'
 
 const DesignContext = createContext()
 
@@ -14,7 +14,7 @@ export const useDesign = () => {
 export const DesignProvider = ({ children }) => {
   // الوضع الحالي
   const [currentMode, setCurrentMode] = useState('simple') // simple | advanced
-  const [currentTemplate, setCurrentTemplate] = useState('participation')
+  const [currentTemplate, setCurrentTemplate] = useState('generalAnnouncement') // البدء بالقالب الديناميكي الجديد
   const [currentColor, setCurrentColor] = useState('blue')
 
   // بيانات التصميم
@@ -30,7 +30,7 @@ export const DesignProvider = ({ children }) => {
   const switchMode = useCallback((mode) => {
     setCurrentMode(mode)
     // اختيار أول قالب في الوضع الجديد
-    const firstTemplate = mode === 'simple' ? 'participation' : 'certificate'
+    const firstTemplate = mode === 'simple' ? 'generalAnnouncement' : 'certificate'
     selectTemplate(firstTemplate)
   }, [])
 
@@ -38,7 +38,12 @@ export const DesignProvider = ({ children }) => {
   const selectTemplate = useCallback((template) => {
     setCurrentTemplate(template)
     // تحميل البيانات الافتراضية للقالب
-    setDesignData(defaultTemplateData[template] || {})
+    const templateData = defaultTemplateData[template] || {}
+    setDesignData(templateData)
+    // تحديث اللون بناءً على القالب الجديد
+    if (templateData.style && templateData.style.primaryColor) {
+      setCurrentColor(templateData.style.primaryColor)
+    }
   }, [])
 
   // تحديته بيانات التصميم
@@ -90,9 +95,12 @@ export const DesignProvider = ({ children }) => {
     })
   }, [])
 
-  // حفظ التصميم
+  // حفظ التصميم في Local Storage
   const saveDesign = useCallback(() => {
-    const data = {
+    const savedDesigns = JSON.parse(localStorage.getItem('savedDesigns') || '[]')
+    const newDesign = {
+      id: Date.now().toString(),
+      name: designData.title || `تصميم ${currentTemplate} جديد`,
       mode: currentMode,
       template: currentTemplate,
       color: currentColor,
@@ -101,30 +109,40 @@ export const DesignProvider = ({ children }) => {
       uploadedImages,
       timestamp: new Date().toISOString()
     }
-    
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-    const link = document.createElement('a')
-    link.download = `design-${currentTemplate}-${Date.now()}.json`
-    link.href = URL.createObjectURL(blob)
-    link.click()
+    localStorage.setItem('savedDesigns', JSON.stringify([newDesign, ...savedDesigns]))
+    alert(`تم حفظ التصميم بنجاح باسم: ${newDesign.name}`)
   }, [currentMode, currentTemplate, currentColor, designData, logos, uploadedImages])
 
-  // تحميل التصميم
-  const loadDesign = useCallback((data) => {
-    setCurrentMode(data.mode || 'simple')
-    setCurrentTemplate(data.template || 'participation')
-    setCurrentColor(data.color || 'blue')
-    setDesignData(data.designData || {})
-    setLogos(data.logos || defaultLogos)
-    setUploadedImages(data.uploadedImages || {})
+  // تحميل التصميم من Local Storage
+  const loadDesign = useCallback((designId) => {
+    const savedDesigns = JSON.parse(localStorage.getItem('savedDesigns') || '[]')
+    const data = savedDesigns.find(d => d.id === designId)
+    if (data) {
+      setCurrentMode(data.mode || 'simple')
+      setCurrentTemplate(data.template || 'generalAnnouncement')
+      setCurrentColor(data.color || 'blue')
+      setDesignData(data.designData || {})
+      setLogos(data.logos || defaultLogos)
+      setUploadedImages(data.uploadedImages || {})
+      alert(`تم تحميل التصميم: ${data.name}`)
+    } else {
+      alert('لم يتم العثور على التصميم.')
+    }
   }, [])
+
+  // الحصول على قائمة التصاميم المحفوظة
+  const getSavedDesigns = useCallback(() => {
+    return JSON.parse(localStorage.getItem('savedDesigns') || '[]')
+  }, [])
+
+
 
   // إعادة تعيين
   const resetDesign = useCallback(() => {
     setCurrentMode('simple')
-    setCurrentTemplate('participation')
+    setCurrentTemplate('generalAnnouncement')
     setCurrentColor('blue')
-    setDesignData(defaultTemplateData.participation)
+    setDesignData(defaultTemplateData.generalAnnouncement)
     setLogos(defaultLogos)
     setUploadedImages({})
   }, [])
@@ -150,6 +168,7 @@ export const DesignProvider = ({ children }) => {
     uploadImage,
     saveDesign,
     loadDesign,
+    getSavedDesigns,
     resetDesign,
   }
 
