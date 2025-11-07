@@ -5,6 +5,7 @@ import PromotionalControls from './PromotionalControls'
 import ResearcherCardControls from './ResearcherCardControls'
 import AcademicCertificateControls from './AcademicCertificateControls'
 import DynamicEditor from './DynamicEditor'
+import AIGenerator from './AIGenerator' // Import the new component
 import { Edit } from 'lucide-react'
 
 const TemplateControls = () => {
@@ -19,6 +20,7 @@ const TemplateControls = () => {
       
       {currentMode === 'simple' && (
         <>
+          {currentTemplate === 'generalAnnouncement' && <AIGenerator />}
           {currentTemplate === 'generalAnnouncement' && <DynamicEditor />}
           {currentTemplate !== 'generalAnnouncement' && <SimpleControls />}
         </>
