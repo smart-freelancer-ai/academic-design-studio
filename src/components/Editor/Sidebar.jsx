@@ -10,8 +10,10 @@ import SavedDesignsManager from '../Controls/SavedDesignsManager'
 import AIAssistant from '../AI/AIAssistant'
 
 const Sidebar = () => {
-  const { currentMode, currentTemplate } = useDesign()
+  const { currentMode, currentTemplate, isExporting } = useDesign()
   const [showAI, setShowAI] = useState(false)
+
+  if (isExporting) return null // Hide sidebar completely during export
   
   // إخفاء الألوان للقوالب المتقدمة
   const showColors = currentMode === 'simple'

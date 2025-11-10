@@ -19,12 +19,14 @@ export const DesignProvider = ({ children }) => {
 
   // بيانات التصميم
   const [designData, setDesignData] = useState(defaultTemplateData.participation)
+  const [isExporting, setIsExporting] = useState(false) // New state for export mode
   
   // الشعارات
   const [logos, setLogos] = useState(defaultLogos)
   
   // الصور المرفوعة
-  const [uploadedImages, setUploadedImages] = useState({})
+  const [uploadedImages,
+    isExporting, setUploadedImages] = useState({})
 
   // تبديل الوضع
   const switchMode = useCallback((mode) => {
@@ -107,6 +109,7 @@ export const DesignProvider = ({ children }) => {
       designData,
       logos,
       uploadedImages,
+    isExporting,
       timestamp: new Date().toISOString()
     }
     localStorage.setItem('savedDesigns', JSON.stringify([newDesign, ...savedDesigns]))
@@ -155,6 +158,7 @@ export const DesignProvider = ({ children }) => {
     designData,
     logos,
     uploadedImages,
+    isExporting,
     
     // Actions
     switchMode,
@@ -170,6 +174,7 @@ export const DesignProvider = ({ children }) => {
     loadDesign,
     getSavedDesigns,
     resetDesign,
+    setIsExporting,
   }
 
   return <DesignContext.Provider value={value}>{children}</DesignContext.Provider>

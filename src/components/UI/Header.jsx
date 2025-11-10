@@ -1,4 +1,5 @@
 import { Palette } from 'lucide-react'
+import ExportButton from './ExportButton'
 
 const Header = () => {
   return (
@@ -19,10 +20,13 @@ const Header = () => {
             </div>
           </div>
           
-          <div className="hidden md:flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-4">
+            <ExportButton />
+            <div className="hidden md:flex items-center gap-2 text-sm text-gray-600">
             <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">
               ✓ جاهز للاستخدام
             </span>
+            </div>
           </div>
         </div>
       </div>
