@@ -1,11 +1,22 @@
 import React, { useState, useCallback } from 'react';
 import html2canvas from 'html2canvas';
-import { Download, Loader2 } from 'lucide-react';
+import { Download, Loader2, Code } from 'lucide-react';
 import { useDesign } from '../../contexts/DesignContext';
 
 const ExportButton = () => {
-    const { designData, setIsExporting } = useDesign();
-    const [isProcessing, setIsProcessing] = useState(false);
+    const handleExportHTML = useCallback(() => {
+        const htmlContent = document.getElementById('design-canvas').outerHTML;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const fileName = (designData.title || 'تصميم-اكاديمي').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        link.download = `${fileName}_${Date.now()}.html`;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }, [designData.title]);
 
     const handleExport = useCallback(async () => {
         setIsProcessing(true);
@@ -53,23 +64,33 @@ const ExportButton = () => {
     }, [designData.title, setIsExporting]);
 
     return (
-        <button
-            onClick={handleExport}
-            disabled={isProcessing}
-            className="flex items-center gap-2 px-4 py-2 bg-academic-blue text-white font-semibold rounded-lg shadow-md hover:bg-academic-blue/90 transition duration-200 disabled:bg-gray-400"
-        >
-            {isProcessing ? (
-                <>
-                    <Loader2 size={20} className="animate-spin" />
-                    جاري التصدير...
-                </>
-            ) : (
-                <>
-                    <Download size={20} />
-                    تصدير كصورة PNG
-                </>
-            )}
-        </button>
+        <div className="flex gap-2">
+            <button
+                onClick={handleExport}
+                disabled={isProcessing}
+                className="flex items-center gap-2 px-4 py-2 bg-academic-blue text-white font-semibold rounded-lg shadow-md hover:bg-academic-blue/90 transition duration-200 disabled:bg-gray-400"
+            >
+                {isProcessing ? (
+                    <>
+                        <Loader2 size={20} className="animate-spin" />
+                        جاري التصدير...
+                    </>
+                ) : (
+                    <>
+                        <Download size={20} />
+                        تصدير كصورة PNG
+                    </>
+                )}
+            </button>
+            <button
+                onClick={handleExportHTML}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-200"
+                title="تصدير كملف HTML"
+            >
+                <Code size={20} />
+                HTML
+            </button>
+        </div>
     );
 };
 

@@ -1,4 +1,4 @@
-import { generateAcademicContent } from '../ai/generate_content';
+
 
 // Mock API endpoint for the frontend to call
 // In a real application, this would be a serverless function or a backend route

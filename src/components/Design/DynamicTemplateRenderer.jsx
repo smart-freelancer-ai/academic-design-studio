@@ -7,7 +7,7 @@ const DynamicTemplateRenderer = () => {
   const { currentTemplate, designData } = useDesign();
 
   // في حال لم يكن هناك قالب محدد، نستخدم بيانات افتراضية
-  const templateData = designData || defaultTemplateData[currentTemplate] || {};
+  const templateData = designData || defaultTemplateData[currentTemplate] || defaultTemplateData.generalAnnouncement;
 
   // هنا يتم استدعاء دالة تقوم بتحويل كائن JSON إلى مكون React
   return (

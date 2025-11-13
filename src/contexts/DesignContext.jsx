@@ -18,15 +18,14 @@ export const DesignProvider = ({ children }) => {
   const [currentColor, setCurrentColor] = useState('blue')
 
   // بيانات التصميم
-  const [designData, setDesignData] = useState(defaultTemplateData.participation)
+  const [designData, setDesignData] = useState(defaultTemplateData.generalAnnouncement)
   const [isExporting, setIsExporting] = useState(false) // New state for export mode
   
   // الشعارات
   const [logos, setLogos] = useState(defaultLogos)
   
   // الصور المرفوعة
-  const [uploadedImages,
-    isExporting, setUploadedImages] = useState({})
+  const [uploadedImages, setUploadedImages] = useState({})
 
   // تبديل الوضع
   const switchMode = useCallback((mode) => {

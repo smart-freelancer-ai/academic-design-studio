@@ -12,10 +12,28 @@ const EditableText = ({ value, path, className, style }) => {
   const [toolbarPosition, setToolbarPosition] = useState({ x: 0, y: 0 });
   const [isToolbarVisible, setIsToolbarVisible] = useState(false);
 
-  const handleToolbarAction = (action) => {
-    // Logic to update style based on action
-    // This is a placeholder for more complex style manipulation
-    console.log(`Action: ${action} on path: ${path}`);
+  const handleToolbarAction = (action, value) => {
+    let newStyle = {};
+    switch (action) {
+      case 'bold':
+        newStyle = { fontWeight: style.fontWeight === 'bold' ? 'normal' : 'bold' };
+        break;
+      case 'italic':
+        newStyle = { fontStyle: style.fontStyle === 'italic' ? 'normal' : 'italic' };
+        break;
+      case 'underline':
+        newStyle = { textDecoration: style.textDecoration === 'underline' ? 'none' : 'underline' };
+        break;
+      case 'color':
+        newStyle = { color: value };
+        break;
+      case 'size':
+        newStyle = { fontSize: value };
+        break;
+      default:
+        break;
+    }
+    updateDesignData(`${path}.style`, { ...style, ...newStyle });
   };
 
   const handleClick = () => {
@@ -62,6 +80,7 @@ const EditableText = ({ value, path, className, style }) => {
         <FloatingToolbar
           position={toolbarPosition}
           onAction={handleToolbarAction}
+          currentStyle={style}
           isVisible={isToolbarVisible}
         />
       </>
@@ -79,46 +98,7 @@ const EditableText = ({ value, path, className, style }) => {
     </span>
   );
 };
-  const { updateDesignData } = useDesign();
-  const [isEditing, setIsEditing] = useState(false);
-  const [text, setText] = useState(value);
 
-  const handleBlur = () => {
-    setIsEditing(false);
-    updateDesignData(path, text);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.target.blur();
-    }
-  };
-
-  if (isEditing) {
-    return (
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
-        className={`w-full bg-yellow-100 border border-yellow-500 p-1 rounded ${className}`}
-        style={style}
-        autoFocus
-      />
-    );
-  }
-
-  return (
-    <span
-      className={`cursor-pointer hover:bg-gray-100 transition-colors duration-200 ${className}`}
-      style={style}
-      onClick={() => setIsEditing(true)}
-    >
-      {value}
-    </span>
-  );
-};
 
 const SectionRenderer = ({ section, path }) => {
   const { type, content, style } = section;
