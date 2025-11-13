@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDesign } from '../../contexts/DesignContext';
-import { templates } from '../../data/defaults';
+import { templates as defaultTemplates } from '../../data/defaults';
+import { templateList as dynamicTemplates } from '../../data/templates';
 import { categories } from '../../data/categories';
 import { 
   Ticket, Scale, Users, GraduationCap, Award, Megaphone, 
@@ -17,7 +18,18 @@ const TemplateSelector = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   // جميع القوالب حسب الوضع
-  const availableTemplates = currentMode === 'simple' ? templates.simple : templates.advanced;
+  const simpleTemplates = [
+    ...defaultTemplates.simple,
+    ...dynamicTemplates.map(t => ({
+      id: t.id,
+      name: t.name,
+      icon: 'Ticket', // Use a default icon for now
+      category: 'dynamic',
+      badge: 'جديد'
+    }))
+  ];
+
+  const availableTemplates = currentMode === 'simple' ? simpleTemplates : defaultTemplates.advanced;
 
   // تفيلتر القوالب حسب التصنيف
   const filteredTemplates = selectedCategory === 'all'

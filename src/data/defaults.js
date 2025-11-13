@@ -10,7 +10,9 @@ export const defaultLogos = {
 
 // البيانات الافتراضية للقوالب
 import { templates as dynamicTemplates } from './designSchema.json'
+import { templates as newTemplates } from './templates'
 export const defaultTemplateData = {
+  ...newTemplates.reduce((acc, t) => ({ ...acc, [t.id]: t.data }), {}),
   generalAnnouncement: dynamicTemplates[0],
   participation: {
     mainTitle: 'باقة المشاركة الحضورية',

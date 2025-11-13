@@ -20,9 +20,11 @@ const TemplateControls = () => {
       
       {currentMode === 'simple' && (
         <>
+          {currentTemplate.startsWith('template-') && <AIGenerator />}
+          {currentTemplate.startsWith('template-') && <DynamicEditor />}
           {currentTemplate === 'generalAnnouncement' && <AIGenerator />}
           {currentTemplate === 'generalAnnouncement' && <DynamicEditor />}
-          {currentTemplate !== 'generalAnnouncement' && <SimpleControls />}
+          {currentTemplate !== 'generalAnnouncement' && !currentTemplate.startsWith('template-') && <SimpleControls />}
         </>
       )}
       
