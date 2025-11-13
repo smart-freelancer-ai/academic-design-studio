@@ -1,9 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import FloatingToolbar from '../components/Controls/FloatingToolbar';
 import { useDesign } from '../contexts/DesignContext';
 
 // هذا المكون هو مثال بسيط لكيفية تحويل كائن JSON إلى مكون React
 // سيتم توسيعه لاحقاً ليشمل جميع أنواع الأقسام المطلوبة
 const EditableText = ({ value, path, className, style }) => {
+  const ref = useRef(null);
+  const { updateDesignData } = useDesign();
+  const [isEditing, setIsEditing] = useState(false);
+  const [text, setText] = useState(value);
+  const [toolbarPosition, setToolbarPosition] = useState({ x: 0, y: 0 });
+  const [isToolbarVisible, setIsToolbarVisible] = useState(false);
+
+  const handleToolbarAction = (action) => {
+    // Logic to update style based on action
+    // This is a placeholder for more complex style manipulation
+    console.log(`Action: ${action} on path: ${path}`);
+  };
+
+  const handleClick = () => {
+    setIsEditing(true);
+    setIsToolbarVisible(true);
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      setToolbarPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top,
+      });
+    }
+  };
+
+  const handleBlur = () => {
+    // Delay hiding the toolbar to allow clicks on it
+    setTimeout(() => {
+      setIsEditing(false);
+      setIsToolbarVisible(false);
+    }, 100);
+    updateDesignData(path, text);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.target.blur();
+    }
+  };
+
+  if (isEditing) {
+    return (
+      <>
+        <input
+          ref={ref}
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          className={`w-full bg-yellow-100 border border-yellow-500 p-1 rounded ${className}`}
+          style={style}
+          autoFocus
+        />
+        <FloatingToolbar
+          position={toolbarPosition}
+          onAction={handleToolbarAction}
+          isVisible={isToolbarVisible}
+        />
+      </>
+    );
+  }
+
+  return (
+    <span
+      ref={ref}
+      className={`cursor-pointer hover:bg-gray-100 transition-colors duration-200 ${className}`}
+      style={style}
+      onClick={handleClick}
+    >
+      {value}
+    </span>
+  );
+};
   const { updateDesignData } = useDesign();
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(value);
@@ -142,8 +217,7 @@ export const renderTemplate = (templateData) => {
           <a href={cta.linkUrl} target="_blank" rel="noopener noreferrer" className="text-xl font-bold no-underline">
           <EditableText value={cta.label} path="cta.label" />
         </a>
-            {cta.label} (<EditableText value={cta.contactNumber} path="cta.contactNumber" />)
-          </a>
+            (<EditableText value={cta.contactNumber} path="cta.contactNumber" />)
         </footer>
       )}
     </div>
